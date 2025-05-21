@@ -25,6 +25,10 @@ terraform/            # Terraform IaC for GCP resources
     cloud-run/        # Cloud Run module
     cloud-sql/        # Cloud SQL module
     cloud-storage/    # Cloud Storage module
+
+script/
+  bash.sh             # Bash script to retrieve Cloud Run public URL
+  logs/               # Log files for script runs
 ```
 
 ## Prerequisites
@@ -38,7 +42,7 @@ terraform/            # Terraform IaC for GCP resources
 
 ### 1. Clone the Repository
 
-```sh
+```powershell
 git clone <this-repo-url>
 cd <repo-root>
 ```
@@ -47,17 +51,26 @@ cd <repo-root>
 
 Copy the example variables file and edit as needed:
 
-```sh
-cp terraform/terraform.example.tfvars terraform/terraform.tfvars
+```powershell
+Copy-Item terraform/terraform.example.tfvars terraform/terraform.tfvars
 ```
 
-Edit `terraform/terraform.tfvars` to set your GCP project ID, region, bucket name, container image, and credentials file path.
+Edit `terraform/terraform.tfvars` to set your GCP project ID, region, bucket name, container image, and credentials file path. Example:
+
+```hcl
+project_id      = "your-gcp-project-id"
+region          = "us-central1"
+bucket_name     = "your-bucket-name"
+container_image = "gcr.io/your-project/your-image:tag"
+```
+
+If you need to override the default credentials path, update the `credentials` variable in `terraform/variables.tf` or provide it in your `terraform.tfvars`.
 
 ### 3. Build and Push the Docker Image (Optional)
 
 If you want to use your own PHP image:
 
-```sh
+```powershell
 cd php-server
 # Build the Docker image
 # Replace <your-image-name> as needed
@@ -70,31 +83,47 @@ Update `container_image` in `terraform.tfvars` if you use a custom image.
 
 ### 4. Initialize and Apply Terraform
 
-```sh
+```powershell
 cd terraform
 terraform init
 terraform plan -var-file="terraform.tfvars"
 terraform apply -var-file="terraform.tfvars"
 ```
 
-### 5. Accessing the Deployed Service
+### 5. Accessing the Deployed Application
 
 After `terraform apply` completes, Terraform will output the Cloud Run service URL. Visit this URL in your browser to access the PHP application.
 
-## Notes
+## Running the Bash Script to Retrieve the Public IP Address
 
-- The Terraform configuration enables required GCP APIs and provisions all resources in the specified region.
-- The Cloud Run service is deployed using the container image specified in `terraform.tfvars`.
-- Cloud SQL and Cloud Storage modules are included for database and file storage needs.
+A helper script is provided at `script/bash.sh` to retrieve the public URL of your deployed Cloud Run service. To use it:
 
-## Cleanup
-
-To remove all resources created by Terraform:
-
-```sh
-cd terraform
-terraform destroy -var-file="terraform.tfvars"
+```powershell
+bash script/bash.sh
 ```
+
+You will be prompted for your GCP Project ID, region, and Cloud Run service name. The script will output the service URL and log the process in `script/cloudrun_lookup.log`.
+
+## Troubleshooting
+
+- **Terraform errors**: Ensure your credentials and project ID are correct, and that required APIs are enabled in your GCP project.
+- **Cloud Run URL not found**: Double-check the service name, region, and project ID. Use `gcloud run services list` to verify the service exists.
+- **Permission issues**: Make sure your service account has the necessary IAM roles for Cloud Run, Cloud SQL, and Cloud Storage.
+- **Windows users**: Use WSL or Git Bash for running bash scripts, or adapt the script for PowerShell if needed.
+
+## Problems Encountered & Solutions
+
+- **API Enablement**: Encountered errors due to missing enabled APIs. Solution: Added `google_project_service` resources in Terraform to enable required APIs automatically.
+- **Credential Path Issues**: On Windows, the default credentials path may differ. Solution: Made the credentials path configurable in `variables.tf` and documented the override in setup instructions.
+- **Script Compatibility**: Bash script may not run natively on Windows PowerShell. Solution: Recommend using WSL or Git Bash, or adapting the script for PowerShell.
+
+## Additional Features for Production-Ready Environments
+
+- **Monitoring & Logging**: Integrate Stackdriver Monitoring and Logging for observability.
+- **Security Configurations**: Implement IAM least privilege, enable VPC Service Controls, and use Secret Manager for sensitive data.
+- **CI/CD Pipeline**: Automate build, test, and deployment using GitHub Actions or Cloud Build.
+- **Backups & DR**: Set up automated Cloud SQL backups and multi-region storage.
+- **Custom Domain & HTTPS**: Map a custom domain to Cloud Run and enforce HTTPS.
 
 ## License
 
