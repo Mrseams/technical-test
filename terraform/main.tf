@@ -62,9 +62,10 @@ resource "google_project_service" "cloud_run_api" {
 ##link: https://github.com/hashicorp/terraform-provider-google-beta/blob/main/website/docs/r/sql_database_instance.html.markdown
 
 resource "google_sql_database_instance" "default" {
-  name             = "sql-instance"
-  database_version = "POSTGRES_14"
-  region           = var.region
+  deletion_protection = false
+  name                = "sql-instance"
+  database_version    = "POSTGRES_14"
+  region              = var.region
 
   settings {
     tier = "db-f1-micro"
