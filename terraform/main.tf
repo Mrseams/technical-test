@@ -50,6 +50,7 @@ provider "google" {
 
 # Enable the required APIs for the project
 # The google_project_service resource enables the Cloud SQL and Cloud Run APIs for the project.
+##link: https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/google_project_service.html
 resource "google_project_service" "cloud_run_api" {
   service = "run.googleapis.com"
 }
@@ -58,6 +59,7 @@ resource "google_project_service" "cloud_run_api" {
 # create a Cloud SQL instance
 # The Cloud SQL instance is created with PostgreSQL version 14 and a db-f1-micro tier.  
 # The instance is created in the region specified by the region variable.
+##link: https://github.com/hashicorp/terraform-provider-google-beta/blob/main/website/docs/r/sql_database_instance.html.markdown
 
 resource "google_sql_database_instance" "default" {
   name             = "sql-instance"
@@ -79,6 +81,7 @@ resource "google_sql_database" "default" {
 ## Create a Cloud Storage bucket
 # The Cloud Storage bucket is created with a name based on the project ID and the region specified by the region variable.
 # The bucket is set to force destroy, meaning it can be deleted even if it contains objects.
+##link: https://registry.terraform.io/providers/hashicorp/google/6.35.0/docs/resources/storage_bucket
 resource "google_storage_bucket" "default" {
   name          = "${var.project_id}-bucket"
   location      = var.region
@@ -91,6 +94,7 @@ resource "google_storage_bucket" "default" {
 # The Cloud Run service is created with a name based on the project ID and the region specified by the region variable.
 # The service uses a container image from Google Container Registry (GCR) and is set to receive 100% of the traffic.
 # The latest revision of the service is used.
+##link: https://github.com/GoogleCloudPlatform/terraform-google-cloud-run
 
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-service"
