@@ -1,6 +1,6 @@
 ### app version
 
-1.0.0
+1.0.1
 
 # DevOps Technical Test: GCP Terraform & PHP Server
 
