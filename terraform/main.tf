@@ -15,6 +15,7 @@ terraform {
     }
   }
 
+
   backend "gcs" {
     bucket = "state-manager-bucket"
     prefix = "volume/terraform.tfstate"
@@ -34,6 +35,7 @@ provider "google" {
   project     = var.project_id
   credentials = file(var.credentials)
 }
+
 
 # Enable the required APIs for the project
 # The google_project_service resource enables the Cloud SQL and Cloud Run APIs for the project.
@@ -67,4 +69,18 @@ module "cloud-run" {
   ]
 }
 
+
+
+
+### setting cloud load balancer
+# Resources: https://cloud.google.com/blog/topics/developers-practitioners/serverless-load-balancing-terraform-hard-way?hl=en
+
+# Create a network endpoint group (NEG) for the Cloud Run service
+# Create a backend service
+# Create a URL map
+# Create a target HTTP proxy
+# Create a global forwarding rule
+
+
+##!to do later
 
