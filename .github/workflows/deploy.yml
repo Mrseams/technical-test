@@ -1,0 +1,39 @@
+name: CI/CD workflow for Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy to Cloud Run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: download code repository
+        uses: actions/checkout@v4
+
+      - name: Format commit message
+        id: tag
+        run: |
+          RAW_MESSAGE=$(git log -1 --pretty=%s)
+          # Replace spaces and special chars with dashes, keep it lowercase
+          SAFE_TAG=$(echo "$RAW_MESSAGE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | cut -c1-50)
+          echo "tag=$SAFE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build -t mrseams/php-fpm-server:${{ steps.tag.outputs.tag }} ./php-server
+
+      - name: Push Docker image to docker 
+        run: |
+          docker push mrseams/php-fpm-server:${{ steps.tag.outputs.tag }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy php-app \
+            --image mrseams/php-fpm-server:${{ steps.tag.outputs.tag }} \
+            --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated
