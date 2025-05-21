@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t mrseams/php-fpm-server:${{ steps.tag.outputs.tag }} ./php-app
+          docker build -t mrseams/php-fpm-server:${{ steps.tag.outputs.tag }} ./php-server
 
       - name: Push Docker image to docker 
         run: |
