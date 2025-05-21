@@ -1,3 +1,7 @@
+### app version
+
+1.0.0
+
 # DevOps Technical Test: GCP Terraform & PHP Server
 
 This repository demonstrates a DevOps workflow for deploying a PHP application to Google Cloud Platform (GCP) using Terraform. It provisions Cloud SQL, Cloud Storage, and Cloud Run resources, and deploys a containerized PHP server.
