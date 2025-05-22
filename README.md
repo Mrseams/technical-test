@@ -92,7 +92,7 @@ terraform apply -var-file="terraform.tfvars"
 
 ### 5. Accessing the Deployed Application
 
-After `terraform apply` completes, Terraform will output the Cloud Run service URL. Visit this URL in your browser to access the PHP application.
+After `terraform apply` completes, Terraform will output the Cloud Run service URL. Visit this URL in your browser to access the PHP application. -**_NOTE: the cloud run might take some time to spin up, be patient._**
 
 ## Running the Bash Script to Retrieve the Public IP Address
 

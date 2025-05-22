@@ -70,17 +70,12 @@ module "cloud-run" {
 }
 
 
+# module "cloud-loadbalancer" {
+#   source         = "./modules/cloud-loadbalancer"
+#   region         = var.region
+#   project_id     = var.project_id
+#   cloud_run_name = module.cloud-run.cloud_run_name
+# }
 
 
-### setting cloud load balancer
-# Resources: https://cloud.google.com/blog/topics/developers-practitioners/serverless-load-balancing-terraform-hard-way?hl=en
-
-# Create a network endpoint group (NEG) for the Cloud Run service
-# Create a backend service
-# Create a URL map
-# Create a target HTTP proxy
-# Create a global forwarding rule
-
-
-##!to do later
 
